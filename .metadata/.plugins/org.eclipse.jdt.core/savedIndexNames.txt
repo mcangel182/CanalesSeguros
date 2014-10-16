@@ -1,0 +1,3 @@
+INDEX VERSION 1.126+/Users/MariaCamila/Dropbox/UNIANDES/2014-20/InfraComp/Casos/Caso 2/CanalesSeguros/.metadata/.plugins/org.eclipse.jdt.core
+1322072182.index
+184619645.index
