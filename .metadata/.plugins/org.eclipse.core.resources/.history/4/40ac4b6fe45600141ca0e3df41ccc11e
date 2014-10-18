@@ -14,16 +14,15 @@ public class Cliente {
 	public final static String STATUS = "STATUS";
 	public final static String ACK = "ACK";
 	public final static String ALGORITMOS = "ALGORITMOS";
-	public final static String ALGS = "AES";
-	public final static String ALGA = "RSA";
-	public final static String ALGH = "HMACMD5";
+	public final static String SIMETRICO = "AES";
+	public final static String ASIMETRICO = "RSA";
+	public final static String HMAC = "HMACMD5";
 	public final static String CERTSRV = "CERTSRV";
 	public final static String AUTHENTICATION = "AUT";
 	public final static String SEPARADOR_LOGIN = ",";
 	public final static String TUTELA = "STATTUTELA";
 	public final static String INFO = "INFO";
 	public final static String RESULTADO = "RESULTADO";
-	public final static String OK = "OK";
 	public final static String ERROR = "ERROR";
 	public final static String FIN = "FIN";
 	
@@ -65,20 +64,7 @@ public class Cliente {
 				return true;
 			}
 		} catch (Exception e) {
-			System.err.println("Handshake Exception: " + e.getMessage()); 
-		}
-		return false;
-	}
-	
-	public boolean algoritmos(){
-		try {
-			out.println(ALGORITMOS + SEPARADOR + ALGS + SEPARADOR + ALGA + SEPARADOR + ALGH);
-			String respuesta = in.readLine();
-			if(respuesta.equals(STATUS + SEPARADOR + OK)){
-				return true;
-			}
-		} catch (Exception e) {
-			System.err.println("Algoritmos Exception: " + e.getMessage()); 
+			System.err.println("Inicio Exception: " + e.getMessage()); 
 		}
 		return false;
 	}

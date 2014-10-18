@@ -74,7 +74,7 @@ public class Cliente {
 		try {
 			out.println(ALGORITMOS + SEPARADOR + ALGS + SEPARADOR + ALGA + SEPARADOR + ALGH);
 			String respuesta = in.readLine();
-			if(respuesta.equals(STATUS + SEPARADOR + OK)){
+			if(respuesta.equals(STATUS + SEPARADOR + ok)){
 				return true;
 			}
 		} catch (Exception e) {
