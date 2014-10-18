@@ -1,0 +1,11 @@
+package Seguridad;
+
+import java.security.*;
+
+public class CertificadoDigital {
+
+	public static PublicKey darLlavePublica(byte[] certificado){
+		
+	}
+
+}

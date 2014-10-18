@@ -2,35 +2,42 @@ package Cliente;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.PublicKey;
+
+import Seguridad.CertificadoDigital;
 
 public class Cliente {
 
 	public final static String SEPARADOR = ":";
 	public final static String HOLA = "HOLA";
-	public final static String STATUS = "STATUS";
 	public final static String ACK = "ACK";
 	public final static String ALGORITMOS = "ALGORITMOS";
 	public final static String ALGS = "AES";
 	public final static String ALGA = "RSA";
 	public final static String ALGH = "HMACMD5";
-	public final static String CERTSRV = "CERTSRV";
-	public final static String AUTHENTICATION = "AUT";
-	public final static String SEPARADOR_LOGIN = ",";
-	public final static String TUTELA = "STATTUTELA";
-	public final static String INFO = "INFO";
-	public final static String RESULTADO = "RESULTADO";
+	public final static String STATUS = "STATUS";
 	public final static String OK = "OK";
 	public final static String ERROR = "ERROR";
-	public final static String FIN = "FIN";
+	public final static String CERTSRV = "CERTSRV";
+	public final static String CERTCLNT = "CERTCLNT";
+	public final static String INIT = "INIT";
+	public final static String INFO = "INFO";
+	public final static String SEPARADOR_LOGIN = ",";
 	
 	private String ipServidor;
 	private int puerto;
 	private BufferedReader in;
+	private InputStream inputStream;
 	private PrintWriter out;
+	private OutputStream outputStream;
+	private byte[] certificadoServidor;
+	private PublicKey llavePublicaServidor;
 	
 	public Cliente(){
 		ipServidor = "infracomp.virtual.uniandes.edu.co";
@@ -41,15 +48,25 @@ public class Cliente {
 		iniciarConexion();
 		
 		if(!handshake()){
-			System.out.println("no respondio handshake");
+			System.out.println("Termina en handshake");
+		}
+		
+		if(!algoritmos()){
+			System.out.println("Termina en Algoritmos");
+		}
+		
+		if(!autenticacionServidor()){
+			System.out.println("Termina en Autenticación del Servidor");
 		}
 	}
 	
 	public void iniciarConexion(){
 		try {
 			Socket sockect = new Socket(ipServidor, puerto);
-			in = new BufferedReader(new InputStreamReader(sockect.getInputStream()));
-			out = new PrintWriter(sockect.getOutputStream(),true);
+			inputStream = sockect.getInputStream();
+			in = new BufferedReader(new InputStreamReader(inputStream));
+			outputStream = sockect.getOutputStream();
+			out = new PrintWriter(outputStream,true);
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -79,6 +96,22 @@ public class Cliente {
 			}
 		} catch (Exception e) {
 			System.err.println("Algoritmos Exception: " + e.getMessage()); 
+		}
+		return false;
+	}
+	
+	public boolean autenticacionServidor(){
+		String cert;
+		try {
+			cert = in.readLine();
+			if (cert.equals(CERTSRV)){
+				certificadoServidor = new byte[1024];
+				inputStream.read(certificadoServidor); 
+				llavePublicaServidor = CertificadoDigital.darLlavePublica(certificadoServidor);
+				return true;
+			}
+		} catch (IOException e) {
+			System.err.println("Autenticación Servidor Exception: " + e.getMessage()); 
 		}
 		return false;
 	}
