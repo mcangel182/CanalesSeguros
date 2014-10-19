@@ -17,47 +17,35 @@ public class Cliente {
 	// Constantes
 	// -----------------------------------------------------------------
 
-	/** Constante que representa el separador de los mensajes del protocolo. */
 	public final static String SEPARADOR = ":";
 	
-	/** Constante que representa el saludo del cliente al servidor. */
 	public final static String HOLA = "HOLA";
 	
-	/** Constante que representa el acknowledge del servidor al cliente. */
 	public final static String ACK = "ACK";
 	
-	/** Constante que representa la cadena de control algooritmos. */
 	public final static String ALGORITMOS = "ALGORITMOS";
 	
-	/** Constante que representa el algorimo simétrico. */
 	public final static String ALG_SIM = "AES";
 	
-	/** Constante que representa el algoritmo asimétrico. */
 	public final static String ALG_ASIM = "RSA";
 	
-	/** Constante que representa el algoritmo para calcular el HMAC. */
 	public final static String ALG_HMAC = "HMACMD5";
 	
-	/** Constante que representa la cadena de control status. */
 	public final static String STATUS = "STATUS";
 	
-	/** Constante que representa la cadena de control ok. */
 	public final static String OK = "OK";
 	
-	/** Constante que representa la cadena de control error. */
 	public final static String ERROR = "ERROR";
 	
-	/** Constante que representa la cadena de control certsrv. */
 	public final static String CERTSRV = "CERTSRV";
 	
-	/** Constante que representa la cadena de control certclnt. */
 	public final static String CERTCLNT = "CERCLNT";
 	
-	/** Constante que representa la cadena de control init. */
 	public final static String INIT = "INIT";
 	
-	/** Constante que representa la cadena de control info. */
 	public final static String INFO = "INFO";
+	
+	public final static String SEPARADOR_LOGIN = ",";
 	
 	// -----------------------------------------------------------------
 	// Atributos
@@ -167,7 +155,8 @@ public class Cliente {
 			outputStream = socket.getOutputStream();
 			out = new PrintWriter(outputStream,true);		
 		} catch (Exception e) {
-			System.err.println("Conexión Exception: " + e.getMessage()); 
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -269,7 +258,7 @@ public class Cliente {
 				}
 			}
 		} catch (Exception e) {
-			System.err.println("Llave Simétrica Exception: " + e.getMessage()); 
+			System.err.println("Autenticación Cliente Exception: " + e.getMessage()); 
 		}
 		return false;
 	}
@@ -304,7 +293,8 @@ public class Cliente {
 				}
 			}
 		} catch (Exception e) {
-			System.err.println("Enviar Información Exception: " + e.getMessage()); 
+			System.err.println("Autenticación Cliente Exception: " + e.getMessage()); 
+			e.printStackTrace();
 		}
 		return false;
 	}
@@ -320,7 +310,7 @@ public class Cliente {
 			outputStream.close();
 			socket.close();
 		} catch (Exception e) {
-			System.err.println("Close Exception: " + e.getMessage()); 
+			e.printStackTrace();
 		}
 	}
 	
@@ -334,8 +324,11 @@ public class Cliente {
 	 * @param args Argumentos del main.
 	 */
 	public static void main(String[] args) {
+		// TODO Auto-generated method stub
 		String datos = null;
+		
 		BufferedReader lector = new BufferedReader(new InputStreamReader(System.in)); 
+		
 		try {
 			System.out.println("Datos: ");
 			datos = lector.readLine();
@@ -343,6 +336,7 @@ public class Cliente {
 			System.err.println("Datos Exception: " + e.getMessage());
 			System.exit(1);
 		}
+		
 		Cliente cliente = new Cliente();
 		cliente.comunicarse(datos);
 	}

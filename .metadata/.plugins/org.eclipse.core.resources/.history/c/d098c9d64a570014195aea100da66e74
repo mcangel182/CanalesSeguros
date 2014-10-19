@@ -6,7 +6,7 @@ import javax.crypto.*;
 import javax.crypto.spec.*;
 
 /**
- * La clase ResumenDigital.
+ * The Class ResumenDigital.
  */
 public class ResumenDigital {
 

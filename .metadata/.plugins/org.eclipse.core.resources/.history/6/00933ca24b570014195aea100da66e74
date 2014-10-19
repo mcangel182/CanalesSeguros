@@ -26,38 +26,33 @@ public class Cliente {
 	/** Constante que representa el acknowledge del servidor al cliente. */
 	public final static String ACK = "ACK";
 	
-	/** Constante que representa la cadena de control algooritmos. */
+	/** Constante que representa la palabra clave algooritmos. */
 	public final static String ALGORITMOS = "ALGORITMOS";
 	
 	/** Constante que representa el algorimo simétrico. */
 	public final static String ALG_SIM = "AES";
 	
-	/** Constante que representa el algoritmo asimétrico. */
+	/** Constante que representa el separador de los mensajes del protocolo. */
 	public final static String ALG_ASIM = "RSA";
 	
-	/** Constante que representa el algoritmo para calcular el HMAC. */
+	/** Constante que representa el separador de los mensajes del protocolo. */
 	public final static String ALG_HMAC = "HMACMD5";
 	
-	/** Constante que representa la cadena de control status. */
 	public final static String STATUS = "STATUS";
 	
-	/** Constante que representa la cadena de control ok. */
 	public final static String OK = "OK";
 	
-	/** Constante que representa la cadena de control error. */
 	public final static String ERROR = "ERROR";
 	
-	/** Constante que representa la cadena de control certsrv. */
 	public final static String CERTSRV = "CERTSRV";
 	
-	/** Constante que representa la cadena de control certclnt. */
 	public final static String CERTCLNT = "CERCLNT";
 	
-	/** Constante que representa la cadena de control init. */
 	public final static String INIT = "INIT";
 	
-	/** Constante que representa la cadena de control info. */
 	public final static String INFO = "INFO";
+	
+	public final static String SEPARADOR_LOGIN = ",";
 	
 	// -----------------------------------------------------------------
 	// Atributos

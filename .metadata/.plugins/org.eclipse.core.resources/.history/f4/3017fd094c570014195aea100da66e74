@@ -53,11 +53,14 @@ public class Cliente {
 	/** Constante que representa la cadena de control certclnt. */
 	public final static String CERTCLNT = "CERCLNT";
 	
-	/** Constante que representa la cadena de control init. */
+	/** Constante que representa el separador de los mensajes del protocolo. */
 	public final static String INIT = "INIT";
 	
-	/** Constante que representa la cadena de control info. */
+	/** Constante que representa el separador de los mensajes del protocolo. */
 	public final static String INFO = "INFO";
+	
+	/** Constante que representa el separador de los mensajes del protocolo. */
+	public final static String SEPARADOR_LOGIN = ",";
 	
 	// -----------------------------------------------------------------
 	// Atributos

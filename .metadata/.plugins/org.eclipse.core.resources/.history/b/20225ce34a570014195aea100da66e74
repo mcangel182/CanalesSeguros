@@ -11,10 +11,6 @@ import java.io.UnsupportedEncodingException;
  */
 public class Transformacion {
 
-	// -----------------------------------------------------------------
-	// Métodos
-	// -----------------------------------------------------------------
-	
 	/**
 	 * Algoritmo de encapsulamiento a enteros. Convierte los bytes de un String a su representacion como enteros.
 	 * @param b Los bytes a representar como enteros.
