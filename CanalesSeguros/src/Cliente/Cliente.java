@@ -1,6 +1,7 @@
 package Cliente;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -8,9 +9,19 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+
+import javax.crypto.SecretKey;
 
 import Seguridad.CertificadoDigital;
+import Seguridad.CifradoAsimetrico;
+import Seguridad.Transformacion;
 
 public class Cliente {
 
@@ -25,7 +36,7 @@ public class Cliente {
 	public final static String OK = "OK";
 	public final static String ERROR = "ERROR";
 	public final static String CERTSRV = "CERTSRV";
-	public final static String CERTCLNT = "CERTCLNT";
+	public final static String CERTCLNT = "CERCLNT";
 	public final static String INIT = "INIT";
 	public final static String INFO = "INFO";
 	public final static String SEPARADOR_LOGIN = ",";
@@ -37,35 +48,48 @@ public class Cliente {
 	private PrintWriter out;
 	private OutputStream outputStream;
 	private byte[] certificadoServidor;
+	private byte[] certificadoCliente;
 	private PublicKey llavePublicaServidor;
+	private KeyPair llavesCliente;
+	private byte[] llaveSecreta;
+	private Socket socket;
 	
 	public Cliente(){
 		ipServidor = "infracomp.virtual.uniandes.edu.co";
 		puerto = 443;
+		inicializarLlavesCliente();
 	}
 	
 	public void comunicarse(String usuario, String clave){
 		iniciarConexion();
-		
+		System.out.println("1");
 		if(!handshake()){
 			System.out.println("Termina en handshake");
 		}
-		
+		System.out.println("2");
 		if(!algoritmos()){
 			System.out.println("Termina en Algoritmos");
 		}
-		
+		System.out.println("3");
 		if(!autenticacionServidor()){
 			System.out.println("Termina en Autenticación del Servidor");
+		}
+		System.out.println("4");
+		if(!autenticacionCliente()){
+			System.out.println("Termina en Autenticación del Cliente");
+		}
+		System.out.println("5");
+		if(!llaveSimetrica()){
+			System.out.println("Termina en Llave Simetrica");
 		}
 	}
 	
 	public void iniciarConexion(){
 		try {
-			Socket sockect = new Socket(ipServidor, puerto);
-			inputStream = sockect.getInputStream();
+			socket = new Socket(ipServidor, puerto);
+			inputStream = socket.getInputStream();
 			in = new BufferedReader(new InputStreamReader(inputStream));
-			outputStream = sockect.getOutputStream();
+			outputStream = socket.getOutputStream();
 			out = new PrintWriter(outputStream,true);
 			
 		} catch (Exception e) {
@@ -108,12 +132,63 @@ public class Cliente {
 				certificadoServidor = new byte[1024];
 				inputStream.read(certificadoServidor); 
 				llavePublicaServidor = CertificadoDigital.darLlavePublica(certificadoServidor);
+				System.out.println(llavePublicaServidor);
 				return true;
 			}
 		} catch (IOException e) {
 			System.err.println("Autenticación Servidor Exception: " + e.getMessage()); 
 		}
 		return false;
+	}
+	
+	public boolean autenticacionCliente(){
+		try {
+			out.println(CERTCLNT);
+			X509Certificate certificado = CertificadoDigital.generarCertificado(llavesCliente);
+			byte[] cert = certificado.getEncoded();
+			outputStream.write(cert);
+			outputStream.flush();
+			return true;
+		} catch (Exception e) {
+			System.err.println("Autenticación Cliente Exception: " + e.getMessage()); 
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	public boolean llaveSimetrica(){
+		try {
+			String mensaje = in.readLine();
+			String[] partesMensaje = mensaje.split(SEPARADOR);
+			if(partesMensaje[0].equals(INIT)){
+				System.out.println("entra");
+				byte [] llaveSecretaEcriptada = Transformacion.destransformar(partesMensaje[1]);
+				llaveSecreta = CifradoAsimetrico.descifrar(llaveSecretaEcriptada, llavesCliente.getPrivate());
+				System.out.println(llaveSecreta);
+				out.println(INIT + SEPARADOR + Transformacion.transformar(CifradoAsimetrico.cifrar(llavePublicaServidor, llaveSecreta)));
+				String respuesta = in.readLine();
+				System.out.println(respuesta);
+				if (respuesta.equals(STATUS + SEPARADOR + OK)){
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			System.err.println("Autenticación Cliente Exception: " + e.getMessage()); 
+		}
+		return false;
+	}
+	
+	private void inicializarLlavesCliente(){
+		try {
+			KeyPairGenerator generator;
+			generator = KeyPairGenerator.getInstance(ALGA);
+			generator.initialize(1024);
+			llavesCliente = generator.generateKeyPair();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -127,11 +202,8 @@ public class Cliente {
 		BufferedReader lector = new BufferedReader( new InputStreamReader(System.in)); 
 		
 		try {
-			System.out.println("Login: ");
+			System.out.println("Datos: ");
 			usuario = lector.readLine();
-			System.out.println("Clave: ");
-			clave = lector.readLine();
-
 		} catch (IOException e) {
 			System.err.println("Datos Exception: " + e.getMessage());
 			System.exit(1);
