@@ -32,7 +32,7 @@ public class CertificadoDigital {
 			certGen.setIssuerDN(dnName);
 			certGen.setNotBefore(startDate);
 			certGen.setNotAfter(expiryDate);
-			certGen.setSubjectDN(dnName);
+			certGen.setSubjectDN(dnName);                       // note: same as issuer
 			certGen.setPublicKey(keyPair.getPublic());
 			certGen.setSignatureAlgorithm("SHA1withRSA");
 			X509Certificate cert = certGen.generate(keyPair.getPrivate(), "BC");
@@ -40,7 +40,8 @@ public class CertificadoDigital {
 		} catch (CertificateEncodingException | InvalidKeyException
 				| IllegalStateException | NoSuchProviderException
 				| NoSuchAlgorithmException | SignatureException e) {
-			System.err.println("Generar Certificado Exception: " + e.getMessage());
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return null;
 	}

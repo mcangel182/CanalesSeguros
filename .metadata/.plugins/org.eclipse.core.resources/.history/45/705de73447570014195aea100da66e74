@@ -8,8 +8,9 @@ import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import Seguridad.*;
 
+// TODO: Auto-generated Javadoc
 /**
- * La clase Cliente.
+ * The Class Cliente.
  */
 public class Cliente {
 	

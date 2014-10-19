@@ -40,7 +40,8 @@ public class CertificadoDigital {
 		} catch (CertificateEncodingException | InvalidKeyException
 				| IllegalStateException | NoSuchProviderException
 				| NoSuchAlgorithmException | SignatureException e) {
-			System.err.println("Generar Certificado Exception: " + e.getMessage());
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return null;
 	}

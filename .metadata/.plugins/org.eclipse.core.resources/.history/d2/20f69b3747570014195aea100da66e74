@@ -9,7 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 import Seguridad.*;
 
 /**
- * La clase Cliente.
+ * La clase cliente Cliente.
  */
 public class Cliente {
 	
