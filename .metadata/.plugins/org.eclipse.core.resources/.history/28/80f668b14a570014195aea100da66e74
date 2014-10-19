@@ -26,7 +26,7 @@ public class ResumenDigital {
 	 *
 	 * @param mensaje Mensaje del cual se quiere calcular el código criptográfico. 
 	 * @param llave Llave con la que se construye el código.
-	 * @return El arreglo de bytes correspondiente al código criptográfico. 
+	 * @return the byte[]
 	 */
 	public static byte[] calcular(String mensaje, byte[] llave) { 
 		try { 
@@ -38,7 +38,7 @@ public class ResumenDigital {
 			return mac.doFinal(); 
 		} 
 		catch (Exception e) { 
-			System.out.println("Resumen Digital Excepcion: " + e.getMessage()); 
+			System.out.println("Excepcion: " + e.getMessage()); 
 			return null; 
 		} 
 	} 

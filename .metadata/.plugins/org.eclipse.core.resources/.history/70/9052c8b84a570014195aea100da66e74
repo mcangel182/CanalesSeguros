@@ -38,7 +38,7 @@ public class ResumenDigital {
 			return mac.doFinal(); 
 		} 
 		catch (Exception e) { 
-			System.out.println("Resumen Digital Excepcion: " + e.getMessage()); 
+			System.out.println("Excepcion: " + e.getMessage()); 
 			return null; 
 		} 
 	} 
