@@ -57,7 +57,7 @@ public class CifradoAsimetrico {
 	 * Retorna la entrada descifrada. 
 	 * @param llavePrivada La llave privada con la que se desencripta.
 	 * @param cipheredText Entrada a descifrar.
-	 * @return El arreglo de bytes con la entrada descifrada.
+	 * @return the byte[]
 	 */
 	public static byte[] descifrar(PrivateKey llavePrivada, byte[] cipheredText) {
 		try {

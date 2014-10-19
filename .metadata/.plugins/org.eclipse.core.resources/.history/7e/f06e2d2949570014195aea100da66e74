@@ -249,7 +249,7 @@ public class Cliente {
 			String[] partesMensaje = mensaje.split(SEPARADOR);
 			if(partesMensaje[0].equals(INIT)){
 				byte [] llaveSecretaEcriptada = Transformacion.destransformar(partesMensaje[1]);
-				byte [] llaveSecretaEnBytes = CifradoAsimetrico.descifrar(llavesCliente.getPrivate(), llaveSecretaEcriptada);
+				byte [] llaveSecretaEnBytes = CifradoAsimetrico.descifrar(llaveSecretaEcriptada, llavesCliente.getPrivate());
 				llaveSecreta = new SecretKeySpec(llaveSecretaEnBytes, 0, llaveSecretaEnBytes.length, "AES");
 				out.println(INIT + SEPARADOR + Transformacion.transformar(CifradoAsimetrico.cifrarConPublica(llavePublicaServidor, llaveSecretaEnBytes)));
 				String respuesta = in.readLine();

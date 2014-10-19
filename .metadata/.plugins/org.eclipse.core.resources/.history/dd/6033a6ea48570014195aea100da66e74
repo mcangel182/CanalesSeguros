@@ -15,7 +15,7 @@ public class CifradoAsimetrico {
 	/**
 	 * Método que cifra un arreglo de bytes con una llave pública. 
 	 * Retorna el arreglo de bytes con la entrada cifrada.
-	 * @param llavePublica La llave pública con la que se encriptará.
+	 * @param llavePublica la llave pública con la que se encriptará.
 	 * @param text Entrada a encriptar.
 	 * @return El arreglo de bytes con la entrada cifrada.
 	 */
@@ -33,9 +33,9 @@ public class CifradoAsimetrico {
 	}
 
 	/**
-	 * Método que cifra un arreglo de bytes con una llave privada. 
+	 * Método que cifra un arreglo de bytes con una llave pública. 
 	 * Retorna el arreglo de bytes con la entrada cifrada.
-	 * @param llavePrivada La llave privada con la que se encriptará.
+	 * @param llavePublica la llave pública con la que se encriptará.
 	 * @param text Entrada a encriptar.
 	 * @return El arreglo de bytes con la entrada cifrada.
 	 */
@@ -53,13 +53,13 @@ public class CifradoAsimetrico {
 	}
 	
 	/**
-	 * Método que permite descifrar una entrada usando una llave privada. 
-	 * Retorna la entrada descifrada. 
-	 * @param llavePrivada La llave privada con la que se desencripta.
-	 * @param cipheredText Entrada a descifrar.
-	 * @return El arreglo de bytes con la entrada descifrada.
+	 * Descifrar.
+	 *
+	 * @param cipheredText the ciphered text
+	 * @param llavePrivada the llave privada
+	 * @return the byte[]
 	 */
-	public static byte[] descifrar(PrivateKey llavePrivada, byte[] cipheredText) {
+	public static byte[] descifrar(byte[] cipheredText, PrivateKey llavePrivada) {
 		try {
 			Cipher cipher = Cipher.getInstance(ALGORITMO);
 			cipher.init(Cipher.DECRYPT_MODE, llavePrivada);

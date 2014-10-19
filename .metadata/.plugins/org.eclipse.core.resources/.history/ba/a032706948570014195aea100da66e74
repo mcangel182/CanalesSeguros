@@ -5,19 +5,19 @@ import java.security.*;
 import javax.crypto.*;
 
 /**
- * La clase CifradoAsimetrico.
+ * The Class CifradoAsimetrico.
  */
 public class CifradoAsimetrico {
 	
-	/** Constante que indica qué el algoritmo se usa para el cifrado. */
+	/** The Constant ALGORITMO. */
 	private final static String ALGORITMO="RSA";
 
 	/**
-	 * Método que cifra un arreglo de bytes con una llave pública. 
-	 * Retorna el arreglo de bytes con la entrada cifrada.
-	 * @param llavePublica La llave pública con la que se encriptará.
-	 * @param text Entrada a encriptar.
-	 * @return El arreglo de bytes con la entrada cifrada.
+	 * Cifrar con publica.
+	 *
+	 * @param llavePublica the llave publica
+	 * @param text the text
+	 * @return the byte[]
 	 */
 	public static byte[] cifrarConPublica(PublicKey llavePublica, byte[] text) {
 		try {
@@ -33,11 +33,11 @@ public class CifradoAsimetrico {
 	}
 
 	/**
-	 * Método que cifra un arreglo de bytes con una llave privada. 
-	 * Retorna el arreglo de bytes con la entrada cifrada.
-	 * @param llavePrivada La llave privada con la que se encriptará.
-	 * @param text Entrada a encriptar.
-	 * @return El arreglo de bytes con la entrada cifrada.
+	 * Cifrar con privada.
+	 *
+	 * @param llavePrivada the llave privada
+	 * @param text the text
+	 * @return the byte[]
 	 */
 	public static byte[] cifrarConPrivada(PrivateKey llavePrivada, byte[] text) {
 		try {
@@ -53,13 +53,13 @@ public class CifradoAsimetrico {
 	}
 	
 	/**
-	 * Método que permite descifrar una entrada usando una llave privada. 
-	 * Retorna la entrada descifrada. 
-	 * @param llavePrivada La llave privada con la que se desencripta.
-	 * @param cipheredText Entrada a descifrar.
-	 * @return El arreglo de bytes con la entrada descifrada.
+	 * Descifrar.
+	 *
+	 * @param cipheredText the ciphered text
+	 * @param llavePrivada the llave privada
+	 * @return the byte[]
 	 */
-	public static byte[] descifrar(PrivateKey llavePrivada, byte[] cipheredText) {
+	public static byte[] descifrar(byte[] cipheredText, PrivateKey llavePrivada) {
 		try {
 			Cipher cipher = Cipher.getInstance(ALGORITMO);
 			cipher.init(Cipher.DECRYPT_MODE, llavePrivada);

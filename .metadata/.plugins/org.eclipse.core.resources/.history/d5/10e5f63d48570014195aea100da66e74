@@ -4,26 +4,18 @@ import java.io.*;
 import java.security.*;
 import javax.crypto.*;
 
-/**
- * La clase CifradoAsimetrico.
- */
 public class CifradoAsimetrico {
 	
-	/** Constante que indica qué el algoritmo se usa para el cifrado. */
 	private final static String ALGORITMO="RSA";
+//	private KeyPair keyPair;
 
-	/**
-	 * Método que cifra un arreglo de bytes con una llave pública. 
-	 * Retorna el arreglo de bytes con la entrada cifrada.
-	 * @param llavePublica La llave pública con la que se encriptará.
-	 * @param text Entrada a encriptar.
-	 * @return El arreglo de bytes con la entrada cifrada.
-	 */
 	public static byte[] cifrarConPublica(PublicKey llavePublica, byte[] text) {
 		try {
 			Cipher cipher = Cipher.getInstance(ALGORITMO);
+			//byte [] clearText = text.getBytes();
 			cipher.init(Cipher.ENCRYPT_MODE, llavePublica);
 			byte [] cipheredText = cipher.doFinal(text);
+//			System.out.println("clave cifrada: " + cipheredText);
 			return cipheredText;
 		}
 		catch (Exception e) {
@@ -32,18 +24,13 @@ public class CifradoAsimetrico {
 		}
 	}
 
-	/**
-	 * Método que cifra un arreglo de bytes con una llave privada. 
-	 * Retorna el arreglo de bytes con la entrada cifrada.
-	 * @param llavePrivada La llave privada con la que se encriptará.
-	 * @param text Entrada a encriptar.
-	 * @return El arreglo de bytes con la entrada cifrada.
-	 */
 	public static byte[] cifrarConPrivada(PrivateKey llavePrivada, byte[] text) {
 		try {
 			Cipher cipher = Cipher.getInstance(ALGORITMO);
+			//byte [] clearText = text.getBytes();
 			cipher.init(Cipher.ENCRYPT_MODE, llavePrivada);
 			byte [] cipheredText = cipher.doFinal(text);
+//			System.out.println("clave cifrada: " + cipheredText);
 			return cipheredText;
 		}
 		catch (Exception e) {
@@ -52,18 +39,13 @@ public class CifradoAsimetrico {
 		}
 	}
 	
-	/**
-	 * Método que permite descifrar una entrada usando una llave privada. 
-	 * Retorna la entrada descifrada. 
-	 * @param llavePrivada La llave privada con la que se desencripta.
-	 * @param cipheredText Entrada a descifrar.
-	 * @return El arreglo de bytes con la entrada descifrada.
-	 */
-	public static byte[] descifrar(PrivateKey llavePrivada, byte[] cipheredText) {
+	public static byte[] descifrar(byte[] cipheredText, PrivateKey llavePrivada) {
 		try {
 			Cipher cipher = Cipher.getInstance(ALGORITMO);
 			cipher.init(Cipher.DECRYPT_MODE, llavePrivada);
 			byte [] res = cipher.doFinal(cipheredText);
+//			String res = new String(clearText);
+//			System.out.println("clave del servidor: " + res);
 			return res;
 		} 
 		catch (Exception e) {
