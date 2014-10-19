@@ -17,12 +17,15 @@
 <fullyQualifiedTypeName name="java.security.cert.X509Certificate"/>
 <fullyQualifiedTypeName name="Seguridad.CertificadoDigital"/>
 <fullyQualifiedTypeName name="java.security.KeyPair"/>
-<fullyQualifiedTypeName name="javax.crypto.SecretKey"/>
 <fullyQualifiedTypeName name="java.security.PublicKey"/>
-<fullyQualifiedTypeName name="java.security.PrivateKey"/>
-<fullyQualifiedTypeName name="Seguridad.Transformacion"/>
-<fullyQualifiedTypeName name="Seguridad.CifradoAsimetrico"/>
 <fullyQualifiedTypeName name="org.bouncycastle.asn1.x509.X509Extensions"/>
 <fullyQualifiedTypeName name="org.bouncycastle.x509.extension.AuthorityKeyIdentifierStructure"/>
+<fullyQualifiedTypeName name="javax.crypto.SecretKey"/>
+<fullyQualifiedTypeName name="Seguridad.ResumenDigital"/>
+<fullyQualifiedTypeName name="Seguridad.CifradoSimetrico"/>
+<fullyQualifiedTypeName name="Seguridad.Transformacion"/>
 <fullyQualifiedTypeName name="java.lang.String"/>
+<fullyQualifiedTypeName name="Seguridad.CifradoAsimetrico"/>
+<fullyQualifiedTypeName name="java.security.PrivateKey"/>
+<fullyQualifiedTypeName name="javax.crypto.spec.SecretKeySpec"/>
 </qualifiedTypeNameHistroy>
