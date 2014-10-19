@@ -18,9 +18,12 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import Seguridad.CertificadoDigital;
 import Seguridad.CifradoAsimetrico;
+import Seguridad.CifradoSimetrico;
+import Seguridad.ResumenDigital;
 import Seguridad.Transformacion;
 
 public class Cliente {
@@ -51,7 +54,7 @@ public class Cliente {
 	private byte[] certificadoCliente;
 	private PublicKey llavePublicaServidor;
 	private KeyPair llavesCliente;
-	private byte[] llaveSecreta;
+	private SecretKey llaveSecreta;
 	private Socket socket;
 	
 	public Cliente(){
@@ -60,27 +63,25 @@ public class Cliente {
 		inicializarLlavesCliente();
 	}
 	
-	public void comunicarse(String usuario, String clave){
+	public void comunicarse(String datos){
 		iniciarConexion();
-		System.out.println("1");
 		if(!handshake()){
 			System.out.println("Termina en handshake");
 		}
-		System.out.println("2");
 		if(!algoritmos()){
 			System.out.println("Termina en Algoritmos");
 		}
-		System.out.println("3");
 		if(!autenticacionServidor()){
 			System.out.println("Termina en Autenticación del Servidor");
 		}
-		System.out.println("4");
 		if(!autenticacionCliente()){
 			System.out.println("Termina en Autenticación del Cliente");
 		}
-		System.out.println("5");
 		if(!llaveSimetrica()){
 			System.out.println("Termina en Llave Simetrica");
+		}
+		if(!enviarInfo(datos)){
+			System.out.println("Termina en Enviar Datos");
 		}
 	}
 	
@@ -132,7 +133,6 @@ public class Cliente {
 				certificadoServidor = new byte[1024];
 				inputStream.read(certificadoServidor); 
 				llavePublicaServidor = CertificadoDigital.darLlavePublica(certificadoServidor);
-				System.out.println(llavePublicaServidor);
 				return true;
 			}
 		} catch (IOException e) {
@@ -162,11 +162,10 @@ public class Cliente {
 			String mensaje = in.readLine();
 			String[] partesMensaje = mensaje.split(SEPARADOR);
 			if(partesMensaje[0].equals(INIT)){
-				System.out.println("entra");
 				byte [] llaveSecretaEcriptada = Transformacion.destransformar(partesMensaje[1]);
-				llaveSecreta = CifradoAsimetrico.descifrar(llaveSecretaEcriptada, llavesCliente.getPrivate());
-				System.out.println(llaveSecreta);
-				out.println(INIT + SEPARADOR + Transformacion.transformar(CifradoAsimetrico.cifrar(llavePublicaServidor, llaveSecreta)));
+				byte [] llaveSecretaEnBytes = CifradoAsimetrico.descifrar(llaveSecretaEcriptada, llavesCliente.getPrivate());
+				llaveSecreta = new SecretKeySpec(llaveSecretaEnBytes, 0, llaveSecretaEnBytes.length, "AES");
+				out.println(INIT + SEPARADOR + Transformacion.transformar(CifradoAsimetrico.cifrarConPublica(llavePublicaServidor, llaveSecretaEnBytes)));
 				String respuesta = in.readLine();
 				System.out.println(respuesta);
 				if (respuesta.equals(STATUS + SEPARADOR + OK)){
@@ -176,6 +175,37 @@ public class Cliente {
 		} catch (Exception e) {
 			System.err.println("Autenticación Cliente Exception: " + e.getMessage()); 
 		}
+		return false;
+	}
+	
+	public boolean enviarInfo(String datos){
+		
+		byte[] datosEnBytes = datos.getBytes();
+		byte[] datosCifrados = CifradoSimetrico.cifrar(llaveSecreta, datosEnBytes);
+		String datosTransformados = Transformacion.transformar(datosCifrados);
+		out.println(INFO + SEPARADOR + datosTransformados);
+		byte[] hashDatos = ResumenDigital.calcular(datos, llaveSecreta.getEncoded());
+		byte[] hashDatosCifrado = CifradoAsimetrico.cifrarConPrivada(llavesCliente.getPrivate(), hashDatos);
+		String hashTransformado = Transformacion.transformar(hashDatosCifrado);
+		out.println(INFO + SEPARADOR + hashTransformado);
+		
+		try {
+			String mensaje = in.readLine();
+			String[] partesMensaje = mensaje.split(SEPARADOR);
+			if(partesMensaje[0].equals(INFO)){
+				String rtaCifrada = partesMensaje[1];
+				byte [] rtaDescifrada = CifradoSimetrico.descifrar(Transformacion.destransformar(rtaCifrada), llaveSecreta);
+				String rta = new String(rtaDescifrada);
+				System.out.println(rta);
+				if (rta.equals(OK)){
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			System.err.println("Autenticación Cliente Exception: " + e.getMessage()); 
+			e.printStackTrace();
+		}
+		
 		return false;
 	}
 	
@@ -196,21 +226,20 @@ public class Cliente {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String usuario = null;
-		String clave = null;
+		String datos = null;
 		
 		BufferedReader lector = new BufferedReader( new InputStreamReader(System.in)); 
 		
 		try {
 			System.out.println("Datos: ");
-			usuario = lector.readLine();
+			datos = lector.readLine();
 		} catch (IOException e) {
 			System.err.println("Datos Exception: " + e.getMessage());
 			System.exit(1);
 		}
 		
 		Cliente cliente = new Cliente();
-		cliente.comunicarse(usuario, clave);
+		cliente.comunicarse(datos);
 	}
 
 }

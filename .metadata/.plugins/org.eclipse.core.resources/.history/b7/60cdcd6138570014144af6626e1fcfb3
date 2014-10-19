@@ -1,0 +1,62 @@
+package Seguridad;
+
+import java.io.*;
+import java.security.*;
+import javax.crypto.*;
+import javax.crypto.spec.*;
+
+public class ResumenDigital {
+
+	private final static String ALGORITMO = "HMACMD5";
+	private KeyPair keyPair;
+
+	private static byte[] getKeyedDigest(byte[] buffer, byte[] llave) { 
+		try { 
+			Mac mac = Mac.getInstance(ALGORITMO);
+			SecretKeySpec keySpec = new SecretKeySpec(llave, ALGORITMO);
+			mac.init(keySpec);
+			//mac.update(buffer);
+			return mac.doFinal(buffer);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null; 
+		} 
+	}
+
+	public static byte[] calcular(String mensaje, byte[] llave) { 
+		try { 
+			byte[] text = mensaje.getBytes(); 
+			byte [] digest = getKeyedDigest(text, llave); 
+			return digest; 
+		} 
+		catch (Exception e) { 
+			System.out.println("Excepcion: " + e.getMessage()); 
+			return null; 
+		} 
+	} 
+
+	public void verificar(byte[] firma) {
+		try {
+			PublicKey pub = keyPair.getPublic();
+			Signature sig = Signature.getInstance(pub.getAlgorithm());
+			sig.initVerify(pub);
+			FileInputStream arch = new FileInputStream(new File("./archivo.txt"));
+			BufferedInputStream bufin = new BufferedInputStream(arch);
+			byte [] buffer = new byte[1024];
+			int len; 
+			//vuelve a calcular localmente el hash
+			while (bufin.available() != 0) {
+				len = bufin.read(buffer);
+				sig.update(buffer,0,len);
+			}
+			bufin.close();
+			//descifra la firma para obtener el hash y hacer la comparación
+			boolean verifies = sig.verify(firma);
+			System.out.println("Verificacion: " + verifies);
+		}
+		catch (Exception e) {
+			System.out.println("Excepcion: " + e.getMessage());
+		}
+	}
+
+}
