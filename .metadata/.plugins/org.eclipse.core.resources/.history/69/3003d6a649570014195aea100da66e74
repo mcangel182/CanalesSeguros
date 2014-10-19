@@ -9,17 +9,9 @@ import javax.crypto.*;
  */
 public class CifradoAsimetrico {
 	
-	// -----------------------------------------------------------------
-	// Constantes
-	// -----------------------------------------------------------------
-
 	/** Constante que indica qué el algoritmo se usa para el cifrado. */
 	private final static String ALGORITMO="RSA";
 
-	// -----------------------------------------------------------------
-	// Métodos
-	// -----------------------------------------------------------------
-	
 	/**
 	 * Método que cifra un arreglo de bytes con una llave pública. 
 	 * Retorna el arreglo de bytes con la entrada cifrada.

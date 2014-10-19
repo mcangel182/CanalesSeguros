@@ -17,7 +17,7 @@ public class CifradoAsimetrico {
 	private final static String ALGORITMO="RSA";
 
 	// -----------------------------------------------------------------
-	// Métodos
+	// Metodos
 	// -----------------------------------------------------------------
 	
 	/**

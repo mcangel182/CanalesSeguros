@@ -19,21 +19,21 @@ public class CifradoSimetrico {
 	private final static String PADDING="AES/ECB/PKCS5Padding";
 
 	// -----------------------------------------------------------------
-	// Métodos
+	// Metodos
 	// -----------------------------------------------------------------
 	
 	/**
-	 * Método que se encarga de cifrar una entrada con una llave secreta.
-	 * Retorna la entrada cifrada.
-	 * @param llaveSecreta Llave secreta con la que se cifrará.
-	 * @param text Entrada a cifrar. 
-	 * @return Arreglo de bytes con la entrada cifrada. 
+	 * Cifrar.
+	 *
+	 * @param desKey the des key
+	 * @param text the text
+	 * @return the byte[]
 	 */
-	public static byte[] cifrar(SecretKey llaveSecreta, byte[] text) {
+	public static byte[] cifrar(SecretKey desKey, byte[] text) {
 		byte [] cipheredText;
 		try {
 			Cipher cipher = Cipher.getInstance(PADDING);
-			cipher.init(Cipher.ENCRYPT_MODE, llaveSecreta);
+			cipher.init(Cipher.ENCRYPT_MODE, desKey);
 			cipheredText = cipher.doFinal(text);
 			return cipheredText;
 		}
@@ -44,16 +44,16 @@ public class CifradoSimetrico {
 	}
 
 	/**
-	 * Método que se encarga de descifrar una entrada con una llave secreta.
-	 * Retorna la entrada descifrada.
-	 * @param llaveSecreta Llave secreta con la que se cifrará.
-	 * @param cipheredText Entrada a descifrar.
+	 * Descifrar.
+	 *
+	 * @param cipheredText the ciphered text
+	 * @param desKey the des key
 	 * @return the byte[]
 	 */
-	public static byte[] descifrar(SecretKey llaveSecreta, byte [] cipheredText) {
+	public static byte[] descifrar(byte [] cipheredText, SecretKey desKey) {
 		try {
 			Cipher cipher = Cipher.getInstance(PADDING);
-			cipher.init(Cipher.DECRYPT_MODE, llaveSecreta);
+			cipher.init(Cipher.DECRYPT_MODE, desKey);
 			byte[] res = cipher.doFinal(cipheredText);
 			return res;
 		}

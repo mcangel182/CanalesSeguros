@@ -13,10 +13,6 @@ import org.bouncycastle.x509.*;
  */
 public class CertificadoDigital {
 	
-	// -----------------------------------------------------------------
-	// Métodos
-	// -----------------------------------------------------------------
-	
 	/**
 	 * Método que genera un certificado digital.
 	 * Retorna el certificador digital generado. 

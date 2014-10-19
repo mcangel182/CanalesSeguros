@@ -46,8 +46,8 @@ public class CifradoSimetrico {
 	/**
 	 * Método que se encarga de descifrar una entrada con una llave secreta.
 	 * Retorna la entrada descifrada.
-	 * @param llaveSecreta Llave secreta con la que se cifrará.
-	 * @param cipheredText Entrada a descifrar.
+	 * @param cipheredText the ciphered text
+	 * @param llaveSecreta the des key
 	 * @return the byte[]
 	 */
 	public static byte[] descifrar(SecretKey llaveSecreta, byte [] cipheredText) {

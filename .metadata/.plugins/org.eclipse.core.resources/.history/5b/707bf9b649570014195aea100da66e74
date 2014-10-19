@@ -110,7 +110,7 @@ public class Cliente {
 	}
 	
 	// -----------------------------------------------------------------
-	// Métodos
+	// Metodos
 	// -----------------------------------------------------------------
 	
 	/**
@@ -285,7 +285,7 @@ public class Cliente {
 			String[] partesMensaje = mensaje.split(SEPARADOR);
 			if(partesMensaje[0].equals(INFO)){
 				String rtaCifrada = partesMensaje[1];
-				byte [] rtaDescifrada = CifradoSimetrico.descifrar(llaveSecreta, Transformacion.destransformar(rtaCifrada));
+				byte [] rtaDescifrada = CifradoSimetrico.descifrar(Transformacion.destransformar(rtaCifrada), llaveSecreta);
 				String rta = new String(rtaDescifrada);
 				System.out.println(rta);
 				if (rta.equals(OK)){
