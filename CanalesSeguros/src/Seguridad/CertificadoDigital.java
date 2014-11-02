@@ -41,9 +41,7 @@ public class CertificadoDigital {
 			certGen.setSignatureAlgorithm("SHA1withRSA");
 			X509Certificate cert = certGen.generate(keyPair.getPrivate(), "BC");
 			return cert;
-		} catch (CertificateEncodingException | InvalidKeyException
-				| IllegalStateException | NoSuchProviderException
-				| NoSuchAlgorithmException | SignatureException e) {
+		} catch (Exception e) {
 			System.err.println("Generar Certificado Exception: " + e.getMessage());
 		}
 		return null;

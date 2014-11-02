@@ -4,8 +4,11 @@ import java.io.*;
 import java.net.*;
 import java.security.*;
 import java.security.cert.X509Certificate;
+
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
+
+import GLoad.Generator;
 import Seguridad.*;
 
 /**
@@ -101,8 +104,10 @@ public class Cliente {
 	 * Método para instanciar un nuevo cliente.
 	 */
 	public Cliente(){
-		ipServidor = "infracomp.virtual.uniandes.edu.co";
-		puerto = 443;
+//		ipServidor = "infracomp.virtual.uniandes.edu.co";
+//		puerto = 443;
+		ipServidor = "localhost";
+		puerto = 5555;
 		inicializarLlavesCliente();
 	}
 	
@@ -131,27 +136,32 @@ public class Cliente {
 	 */
 	public void comunicarse(String datos){
 		iniciarConexion();
+		boolean hayError = false;
 		if(!handshake()){
-			System.out.println("Termina en handshake");
+			hayError=true;
 		}
 		// Etapa 1: seleccionar algoritmos.
-		if(!algoritmos()){
-			System.out.println("Termina en Algoritmos");
+		if(!hayError && !algoritmos()){
+			hayError=true;
 		}
 		// Etapa 2: autenticación del servidor.
-		if(!autenticacionServidor()){
-			System.out.println("Termina en Autenticación del Servidor");
+		if(!hayError && !autenticacionServidor()){
+			hayError=true;
 		}
 		// Etapa 3: autenticación del cliente.
-		if(!autenticacionCliente()){
-			System.out.println("Termina en Autenticación del Cliente");
+		if(!hayError && !autenticacionCliente()){
+			hayError=true;
 		}
 		// Etapa 4: envio de información
-		if(!llaveSimetrica()){
-			System.out.println("Termina en Llave Simetrica");
+		if(!hayError && !llaveSimetrica()){
+			hayError=true;
 		}
-		if(!enviarInfo(datos)){
-			System.out.println("Termina en Enviar Datos");
+		if(!hayError && !enviarInfo(datos)){
+			hayError=true;
+		}
+		if(hayError){
+			System.out.println("hubo error");
+			Generator.numTransPerdidas++;
 		}
 		close();
 	}
@@ -222,7 +232,7 @@ public class Cliente {
 				llavePublicaServidor = CertificadoDigital.darLlavePublica(certificadoServidor);
 				return true;
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			System.err.println("Autenticación Servidor Exception: " + e.getMessage()); 
 		}
 		return false;
@@ -243,7 +253,6 @@ public class Cliente {
 			return true;
 		} catch (Exception e) {
 			System.err.println("Autenticación Cliente Exception: " + e.getMessage()); 
-			e.printStackTrace();
 		}
 		
 		return false;
@@ -280,7 +289,10 @@ public class Cliente {
 	 * @param datos Los datos correpondientes a la afiliación. 
 	 * @return true, si se envían los datos con éxito; false de lo contrario. 
 	 */
-	public boolean enviarInfo(String datos){	
+	public boolean enviarInfo(String datos){
+		
+		long tiempoInic = System.currentTimeMillis();
+		
 		byte[] datosEnBytes = datos.getBytes();
 		byte[] datosCifrados = CifradoSimetrico.cifrar(llaveSecreta, datosEnBytes);
 		String datosTransformados = Transformacion.transformar(datosCifrados);
@@ -298,8 +310,14 @@ public class Cliente {
 				String rtaCifrada = partesMensaje[1];
 				byte [] rtaDescifrada = CifradoSimetrico.descifrar(llaveSecreta, Transformacion.destransformar(rtaCifrada));
 				String rta = new String(rtaDescifrada);
-				System.out.println(rta);
+				//System.out.println(rta);
 				if (rta.equals(OK)){
+					long tiempoFin = System.currentTimeMillis();
+					long tiempoRespuestaPedido = tiempoFin-tiempoInic;
+					//System.out.println(""+tiempoRespuestaPedido);
+					Generator.escritoArchivo = new FileWriter(Generator.archivoResultados, true);
+					Generator.escritoArchivo.write(tiempoRespuestaPedido+"\n");
+					Generator.escritoArchivo.close();
 					return true;
 				}
 			}

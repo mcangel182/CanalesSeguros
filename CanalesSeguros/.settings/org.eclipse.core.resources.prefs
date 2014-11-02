@@ -1,5 +1,6 @@
 eclipse.preferences.version=1
 encoding//src/Cliente/Cliente.java=UTF-8
+encoding//src/GLoad/Generator.java=UTF-8
 encoding//src/Seguridad/CertificadoDigital.java=UTF-8
 encoding//src/Seguridad/CifradoAsimetrico.java=UTF-8
 encoding//src/Seguridad/CifradoSimetrico.java=UTF-8
